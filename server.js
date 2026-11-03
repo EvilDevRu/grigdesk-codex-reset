@@ -1,4 +1,5 @@
 import { createSource } from './src/source.js';
+import { providerResources } from './src/providerResources.js';
 
 const PLUGIN_ID = 'codex-reset';
 const TICK_MS = 60_000;
@@ -81,4 +82,7 @@ export default async function codexResetPlugin(app, options = {}) {
     ...source.peek(),
   }));
   app.get('/signal', async () => refresh());
+  app.get('/provider-usage', async (request) => ({
+    resources: request.query?.providerId === 'codex' ? providerResources(await refresh()) : [],
+  }));
 }

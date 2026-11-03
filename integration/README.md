@@ -2,8 +2,14 @@
 
 Codex Reset — серверный пользовательский плагин с `api: 2`.
 В пакете ровно один серверный вход `server.js`, нет `web`, `webModule` и `nav`.
-Он использует стандартные `lifecycle.onDisable`, `lifecycle.onEnable`, `onClose`
+Он объявляет размещение `provider.popover.after-bars` и использует стандартные `lifecycle.onDisable`, `lifecycle.onEnable`, `onClose`
 и `options.core.emit` для общего события `plugin-event`.
+
+Для отображения требуется веб-часть GrigDesk с нативным
+`ProviderUsagePlugins.vue`: компонент читает JSON `/provider-usage` только
+для включённого фонового плагина и его размещения. Сервер GrigDesk менять
+для этого контракта не требуется. После обновления пакета окна закройте приложение и откройте снова.
+Без совместимого веба доступны только сбор и API.
 
 Сборка и runtime-зависимости отсутствуют. Требуется Node.js 22.19+ и GrigDesk
 с серверным API 2, общим auth guard, lifecycle и маршрутизацией `/api/ext/<id>/`.

@@ -61,9 +61,11 @@ export async function checkRelease(root = PACKAGE_ROOT) {
   assert.equal(pkg.type, 'module');
   assert.equal(pkg.private, true, 'Плагин публикуется через Git, а не npm registry');
 
-  for (const key of ['web', 'webModule', 'nav', 'placements']) {
+  for (const key of ['web', 'webModule', 'nav']) {
     assert.equal(manifest[key], undefined, `Фоновый плагин не объявляет ${key}`);
   }
+
+  assert.deepEqual(manifest.placements, [{ slot: 'provider.popover.after-bars', default: true }]);
 
   for (const key of ['dependencies', 'devDependencies', 'optionalDependencies', 'peerDependencies']) {
     assert.equal(Object.keys(pkg[key] ?? {}).length, 0, 'Пакет не требует установки зависимостей');

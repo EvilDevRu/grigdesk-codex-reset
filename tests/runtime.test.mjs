@@ -85,6 +85,7 @@ test('API 2 без интерфейса: обнаружение, событие 
   assert.equal(manifest.web, null);
   assert.equal(manifest.webModule, null);
   assert.equal(manifest.nav, null);
+  assert.deepEqual(manifest.placements, [{ slot: 'provider.popover.after-bars', default: true }]);
 
   const signal = await host.app.inject('/api/ext/codex-reset/signal');
 
@@ -94,6 +95,14 @@ test('API 2 без интерфейса: обнаружение, событие 
   assert.equal(host.signals().length, 1);
   assert.equal(host.signals()[0].data.pluginId, 'codex-reset');
   assert.equal(host.signals()[0].data.event, 'signal');
+
+  const popup = await host.app.inject('/api/ext/codex-reset/provider-usage?providerId=codex');
+  const other = await host.app.inject('/api/ext/codex-reset/provider-usage?providerId=claude');
+
+  assert.equal(popup.statusCode, 200);
+  assert.equal(popup.json().resources[1].summary, '29 % / 50 %');
+  assert.deepEqual(other.json(), { resources: [] });
+  assert.equal(calls, 1);
   assert.equal((await host.toggle(false)).statusCode, 200);
   assert.equal((await host.app.inject('/api/ext/codex-reset/signal')).statusCode, 404);
   assert.equal((await host.toggle(true)).statusCode, 200);
