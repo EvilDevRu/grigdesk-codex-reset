@@ -1,0 +1,8 @@
+{
+  "id": "codex-reset",
+  "api": 2,
+  "version": "0.1.0",
+  "name": "Codex Reset",
+  "description": "Фоновый сбор данных codexreset.org о сбросах и прогнозах",
+  "category": "dev"
+}

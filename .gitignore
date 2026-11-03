@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+.runtime/
+.env
+.env.*
+*.log
+docs/plans/
+__pycache__/
