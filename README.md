@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/codex-reset.svg" width="88" height="88" alt="Codex Reset">
+  <img src="docs/assets/codex-reset.png" width="88" height="88" alt="Codex Reset">
 </p>
 
 <h1 align="center">Codex Reset</h1>
@@ -13,7 +13,7 @@
 <p align="center">
   <a href="#установка">Установить</a> ·
   <a href="docs/usage.md">Как пользоваться</a> ·
-  <a href="https://github.com/EvilDevRu/grigdesk-codex-reset/releases/tag/v0.1.1">Версия 0.1.1</a>
+  <a href="https://github.com/EvilDevRu/grigdesk-codex-reset/releases/tag/v0.1.2">Версия 0.1.2</a>
 </p>
 
 Codex Reset собирает публичные данные [codexreset.org](https://codexreset.org/):
@@ -46,15 +46,16 @@ Codex Reset собирает публичные данные [codexreset.org](ht
    https://github.com/EvilDevRu/grigdesk-codex-reset
    ```
 
-3. Нажмите **«Найти версии»** и выберите **v0.1.1**.
+3. Нажмите **«Найти версии»** и выберите **v0.1.2**.
 4. Просмотрите пакет, установите и включите **Codex Reset**.
 
 Репозиторий приватный: у владельца установки должен быть доступ к нему.
 Git на машине GrigDesk должен быть авторизован. Для доступа через GitHub CLI
 однократно выполните `gh auth login` и `gh auth setup-git`.
 
-Нужен GrigDesk с серверным API 2, выводом JSON-ресурсов фоновых плагинов
+Нужен GrigDesk с единым манифестом v1 (`api: 1`), выводом JSON-ресурсов
 в `provider.popover.after-bars` и Node.js 22.19 или новее.
+Версии плагина до первого релиза остаются в ветке **0.1.x**.
 После обновления пакета окна GrigDesk закройте приложение и откройте снова.
 Установка зависимостей и сборка плагину не требуются.
 
@@ -66,7 +67,8 @@ Git на машине GrigDesk должен быть авторизован. Д�
 и `event: signal`.
 
 Пример потребителя и формат ответа — в [документации API](docs/api.md).
-Для всплывашки плагин объявляет размещение `provider.popover.after-bars`
+Для всплывашки плагин объявляет `contributes.slots` с местом
+`provider.popover.after-bars` и типом `provider-usage`
 и отдаёт `GET /api/ext/codex-reset/provider-usage?providerId=codex`.
 Размещение можно отдельно скрыть в общих настройках плагина.
 

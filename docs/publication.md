@@ -2,6 +2,9 @@
 
 Проект публикуется в приватном репозитории `EvilDevRu/grigdesk-codex-reset`.
 Git-репозиторий разработки не является установленной копией плагина.
+До первого релиза версия пакета остаётся в ветке **0.1.x**.
+`check:release` отклоняет другую минорную или мажорную версию.
+Поколение манифеста `api: 1` независимо от версии пакета.
 Публикация выполняется отдельным явным действием владельца.
 
 ## Перед выпуском
@@ -31,11 +34,11 @@ Git-репозиторий разработки не является устан
 ```bash
 gh repo create EvilDevRu/grigdesk-codex-reset --private --source=. --remote=origin
 git add .
-git commit -m "Show Codex Reset in provider dropdown"
-git tag -a v0.1.1 -m "Codex Reset 0.1.1"
+git commit -m "Adapt Codex Reset to manifest v1"
+git tag -a v0.1.2 -m "Codex Reset 0.1.2"
 git push -u origin main
-git push origin v0.1.1
-gh release create v0.1.1 --verify-tag --title "Codex Reset 0.1.1" --notes-file CHANGELOG.md
+git push origin v0.1.2
+gh release create v0.1.2 --verify-tag --title "Codex Reset 0.1.2" --notes-file CHANGELOG.md
 ```
 
 Если remote или репозиторий уже существует, используйте его вместо повторного
@@ -46,7 +49,10 @@ gh release create v0.1.1 --verify-tag --title "Codex Reset 0.1.1" --notes-file C
 
 ## Иконка
 
-`docs/assets/codex-reset.svg` — собственный знак в стиле README других плагинов:
+`docs/assets/codex-reset.png` — единая иконка, объявленная полем `icon`,
+для карточки GrigDesk и README. PNG 256×256 укладывается в лимит 256 КиБ.
+`docs/assets/codex-reset.svg` — её редактируемый исходник в стиле README других плагинов:
 синяя обводка, контур 24×24, круговая стрелка вокруг часов. SVG содержит `title`
 для доступности, не загружает внешние ресурсы и не использует шрифты или скрипты.
-Иконка относится к оформлению репозитория; добавлять `nav` для неё не нужно.
+Вход манифеста принимает PNG, JPEG и WebP; SVG используется только как исходник.
+Собственной панели и декларации `contributes.panels` у плагина нет.

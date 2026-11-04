@@ -55,17 +55,26 @@ export async function checkRelease(root = PACKAGE_ROOT) {
   const files = await releaseFiles(root);
 
   assert.equal(manifest.id, 'codex-reset');
-  assert.equal(manifest.api, 2);
-  assert.match(manifest.version, /^\d+\.\d+\.\d+$/);
+  assert.equal(manifest.api, 1);
+  assert.match(manifest.version, /^0\.1\.\d+$/, 'До первого релиза версия остаётся в ветке 0.1.x');
   assert.equal(pkg.version, manifest.version, 'Версии package.json и plugin.json расходятся');
   assert.equal(pkg.type, 'module');
   assert.equal(pkg.private, true, 'Плагин публикуется через Git, а не npm registry');
 
-  for (const key of ['web', 'webModule', 'nav']) {
+  for (const key of ['web', 'webModule', 'nav', 'settings', 'placements', 'minGrigDeskVersion']) {
     assert.equal(manifest[key], undefined, `Фоновый плагин не объявляет ${key}`);
   }
 
-  assert.deepEqual(manifest.placements, [{ slot: 'provider.popover.after-bars', default: true }]);
+  assert.deepEqual(manifest.entrypoints, { server: 'server.js' });
+  assert.deepEqual(manifest.contributes, {
+    slots: [{
+      slot: 'provider.popover.after-bars',
+      kind: 'provider-usage',
+      default: true,
+    }],
+  });
+  assert.deepEqual(manifest.engines, { grigdesk: '>=0.1.0' });
+  assert.equal(manifest.icon, 'docs/assets/codex-reset.png');
 
   for (const key of ['dependencies', 'devDependencies', 'optionalDependencies', 'peerDependencies']) {
     assert.equal(Object.keys(pkg[key] ?? {}).length, 0, 'Пакет не требует установки зависимостей');
@@ -74,15 +83,18 @@ export async function checkRelease(root = PACKAGE_ROOT) {
   const readme = await readFile(path.join(root, 'README.md'), 'utf8');
   const changelog = await readFile(path.join(root, 'CHANGELOG.md'), 'utf8');
   const icon = await readFile(path.join(root, 'docs/assets/codex-reset.svg'), 'utf8');
+  const raster = await readFile(path.join(root, manifest.icon));
 
   assert.ok(readme.includes(`Версия ${manifest.version}`), 'Версия README расходится с манифестом');
   assert.ok(changelog.includes(`## ${manifest.version}`), 'Нет записи версии в CHANGELOG');
-  assert.match(readme, /src="docs\/assets\/codex-reset\.svg"/);
+  assert.match(readme, /src="docs\/assets\/codex-reset\.png"/);
+  assert.ok(raster.subarray(0, 8).equals(Buffer.from('89504e470d0a1a0a', 'hex')));
+  assert.ok(raster.length <= 256 * 1024, 'Иконка превышает лимит манифеста v1');
   assert.match(icon, /viewBox="0 0 24 24"/);
   assert.match(icon, /<title\b/);
   assert.doesNotMatch(icon, /<(?:script|image|foreignObject)\b|\bon\w+\s*=|(?:href|src)\s*=/i);
 
-  const server = await import(pathToFileURL(path.join(root, 'server.js')).href);
+  const server = await import(pathToFileURL(path.join(root, manifest.entrypoints.server)).href);
 
   assert.equal(typeof server.default, 'function', 'Серверный вход должен экспортировать функцию');
 

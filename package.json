@@ -1,9 +1,9 @@
 {
   "name": "@grigdesk/codex-reset",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
-  "description": "Фоновый источник данных codexreset.org для GrigDesk API 2",
+  "description": "Фоновый источник данных codexreset.org для GrigDesk, манифест v1",
   "repository": {
     "type": "git",
     "url": "https://github.com/EvilDevRu/grigdesk-codex-reset.git"

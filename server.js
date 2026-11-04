@@ -5,7 +5,7 @@ const PLUGIN_ID = 'codex-reset';
 const TICK_MS = 60_000;
 
 /**
- * Серверный плагин API 2 без браузерного кода и собственной навигации.
+ * Серверный плагин единого контракта v1 без собственной панели.
  * Работает при закрытых окнах, останавливает сеть и таймер при выключении/замене.
  */
 export default async function codexResetPlugin(app, options = {}) {
@@ -78,7 +78,7 @@ export default async function codexResetPlugin(app, options = {}) {
 
   app.get('/status', async () => ({
     pluginId: PLUGIN_ID,
-    api: 2,
+    api: 1,
     ...source.peek(),
   }));
   app.get('/signal', async () => refresh());
