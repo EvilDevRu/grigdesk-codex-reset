@@ -34,11 +34,11 @@ Git-репозиторий разработки не является устан
 ```bash
 gh repo create EvilDevRu/grigdesk-codex-reset --private --source=. --remote=origin
 git add .
-git commit -m "Release Codex Reset 0.1.3"
-git tag -a v0.1.3 -m "Codex Reset 0.1.3"
+git commit -m "Release Codex Reset 0.1.4"
+git tag -a v0.1.4 -m "Codex Reset 0.1.4"
 git push -u origin main
-git push origin v0.1.3
-gh release create v0.1.3 --verify-tag --title "Codex Reset 0.1.3" --notes-file CHANGELOG.md
+git push origin v0.1.4
+gh release create v0.1.4 --verify-tag --title "Codex Reset 0.1.4" --notes-file CHANGELOG.md
 ```
 
 Если remote или репозиторий уже существует, используйте его вместо повторного

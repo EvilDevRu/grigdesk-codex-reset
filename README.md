@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#установка">Установить</a> ·
-  <a href="https://github.com/EvilDevRu/grigdesk-codex-reset/releases/tag/v0.1.3">Версия 0.1.3</a>
+  <a href="https://github.com/EvilDevRu/grigdesk-codex-reset/releases/tag/v0.1.4">Версия 0.1.4</a>
 </p>
 
 Codex Reset показывает давность последнего сброса квоты Codex и прогноз
@@ -38,3 +38,5 @@ Codex Reset показывает давность последнего сбро�
 с пометкой об их давности.
 
 Прогноз сайта не гарантирует сброс личной квоты.
+
+Лицензия: [MIT](LICENSE).

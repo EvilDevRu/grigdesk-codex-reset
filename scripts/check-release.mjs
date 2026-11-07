@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const PACKAGE_ROOT = fileURLToPath(new URL('../', import.meta.url));
-const ROOTS = ['.gitignore', 'README.md', 'CHANGELOG.md', 'package.json', 'plugin.json',
+const ROOTS = ['.gitignore', 'LICENSE', 'README.md', 'CHANGELOG.md', 'package.json', 'plugin.json',
   'server.js', 'src', 'docs', 'integration', 'scripts', 'tests'];
 
 /**
@@ -59,6 +59,7 @@ export async function checkRelease(root = PACKAGE_ROOT) {
   assert.match(manifest.version, /^0\.1\.\d+$/, 'До первого релиза версия остаётся в ветке 0.1.x');
   assert.equal(pkg.version, manifest.version, 'Версии package.json и plugin.json расходятся');
   assert.equal(pkg.type, 'module');
+  assert.equal(pkg.license, 'MIT', 'Пакет распространяется под лицензией MIT');
   assert.equal(pkg.private, true, 'Плагин публикуется через Git, а не npm registry');
 
   for (const key of ['web', 'webModule', 'nav', 'settings', 'placements', 'minGrigDeskVersion']) {

@@ -147,7 +147,7 @@ test('манифест v1: сервер, явный слот, PNG-иконка �
 test('установщик принимает пакет v1 с сервером, слотом и растровой иконкой без npm', async (t) => {
   const host = await fixture(t);
   const result = await validatePluginPackage(host.directory, {
-    version: '0.1.3',
+    version: '0.1.4',
     expectedId: 'codex-reset',
     reservedIds: new Set(),
     grigDeskVersion: '0.1.0',
