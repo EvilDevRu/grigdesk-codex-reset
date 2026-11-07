@@ -1,6 +1,6 @@
 {
   "name": "@grigdesk/codex-reset",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "type": "module",
   "description": "Фоновый источник данных codexreset.org для GrigDesk, манифест v1",

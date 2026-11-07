@@ -1,5 +1,36 @@
 import { HOMEPAGE } from './source.js';
 
+const relativeFormatters = {
+  ru: new Intl.RelativeTimeFormat('ru', { numeric: 'always' }),
+  en: new Intl.RelativeTimeFormat('en', { numeric: 'always' }),
+};
+
+function resetAge(value, now, locale) {
+  const at = typeof value === 'string' ? Date.parse(value) : Number.NaN;
+  const elapsed = now - at;
+
+  if (!Number.isFinite(elapsed) || elapsed < 0) {
+    return '';
+  }
+
+  const minutes = Math.floor(elapsed / 60_000);
+
+  if (minutes === 0) {
+    return locale === 'ru' ? 'только что' : 'just now';
+  }
+
+  const formatter = relativeFormatters[locale];
+
+  if (minutes >= 24 * 60) {
+    return formatter.format(-Math.floor(minutes / (24 * 60)), 'day');
+  }
+  if (minutes >= 60) {
+    return formatter.format(-Math.floor(minutes / 60), 'hour');
+  }
+
+  return formatter.format(-minutes, 'minute');
+}
+
 function dateLabel(value) {
   return typeof value === 'string' && Number.isFinite(Date.parse(value))
     ? new Date(value).toISOString().slice(0, 16).replace('T', ' ') + ' UTC'
@@ -16,8 +47,9 @@ function percentage(value) {
  * Прогноз становится строками существующего popup, а не отдельной страницей.
  * Переводы едут с данными; давность источника и экспериментальность оценки видны всегда.
  */
-export function providerResources(signal) {
-  const reset = dateLabel(signal.lastReset?.at);
+export function providerResources(signal, now = Date.now()) {
+  const resetRu = resetAge(signal.lastReset?.at, now, 'ru');
+  const resetEn = resetAge(signal.lastReset?.at, now, 'en');
   const fetched = dateLabel(signal.fetchedAt);
   const staleRu = signal.stale
     ? fetched ? `Данные устарели · получены ${fetched}.` : 'Источник пока недоступен.'
@@ -34,11 +66,11 @@ export function providerResources(signal) {
   return [{
     key: 'last-reset',
     label: 'codexreset.org',
-    summary: reset || 'Нет данных',
+    summary: resetRu || 'Нет данных',
     note: lastRu,
     tone: signal.stale ? 'warn' : 'muted',
     translations: {
-      en: { summary: reset || 'No data', note: lastEn },
+      en: { summary: resetEn || 'No data', note: lastEn },
     },
     controls: [{
       id: 'source',

@@ -21,6 +21,9 @@ const { default: pluginsModule } = await import(pathToFileURL(
 const { validatePluginPackage } = await import(pathToFileURL(
   path.join(SOURCE_ROOT, 'server/src/lib/packageInstall/validatePackage.ts'),
 ).href);
+const { parseProviderPluginUsage, localizeProviderPluginResource } = await import(pathToFileURL(
+  path.join(SOURCE_ROOT, 'shared/plugins/providerUsageResources.ts'),
+).href);
 const PLUGIN_ROOT = fileURLToPath(new URL('../', import.meta.url));
 const PAGE = ',forecast:$R[1]={score24h:29,score48h:50}';
 
@@ -144,7 +147,7 @@ test('манифест v1: сервер, явный слот, PNG-иконка �
 test('установщик принимает пакет v1 с сервером, слотом и растровой иконкой без npm', async (t) => {
   const host = await fixture(t);
   const result = await validatePluginPackage(host.directory, {
-    version: '0.1.2',
+    version: '0.1.3',
     expectedId: 'codex-reset',
     reservedIds: new Set(),
     grigDeskVersion: '0.1.0',
@@ -155,6 +158,39 @@ test('установщик принимает пакет v1 с сервером,
   assert.equal(result.serverEntry, 'server.js');
   assert.equal(result.webModuleDir, null);
   assert.deepEqual(result.npmDirs, []);
+});
+
+test('всплывашка пересчитывает давность из кэша и выбирает перевод по языку GrigDesk', async (t) => {
+  let now = Date.parse('2026-11-04T12:00:00.000Z');
+  const resetAt = '2026-11-04T11:59:00.000Z';
+  let calls = 0;
+
+  t.mock.method(Date, 'now', () => now);
+
+  const host = await fixture(t, async () => {
+    calls += 1;
+
+    return new Response(`{id:"reset:1",dateTime:"${resetAt}",type:"forced-reset"}${PAGE}`);
+  });
+  const url = '/api/ext/codex-reset/provider-usage?providerId=codex';
+  const first = await host.app.inject(url);
+  const [resource] = parseProviderPluginUsage('codex-reset', first.json());
+
+  assert.equal(first.statusCode, 200);
+  assert.equal(localizeProviderPluginResource(resource, 'ru').summary, '1 минуту назад');
+  assert.equal(localizeProviderPluginResource(resource, 'en').summary, '1 minute ago');
+
+  now += 4 * 60_000;
+
+  const next = await host.app.inject(url);
+  const [updated] = parseProviderPluginUsage('codex-reset', next.json());
+
+  assert.equal(next.statusCode, 200);
+  assert.equal(localizeProviderPluginResource(updated, 'ru').summary, '5 минут назад');
+  assert.equal(localizeProviderPluginResource(updated, 'en').summary, '5 minutes ago');
+  assert.equal(calls, 1, 'пересчёт давности не требует нового запроса к источнику');
+  assert.equal(host.signals().length, 1, 'пересчёт текста не меняет снимок источника');
+  assert.equal((await host.app.inject('/api/ext/codex-reset/signal')).json().lastReset.at, resetAt);
 });
 
 test('параллельные читатели получают один сетевой ответ и одно событие', async (t) => {

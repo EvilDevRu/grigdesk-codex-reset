@@ -19,7 +19,7 @@ Git-репозиторий разработки не является устан
    ```
 
 3. Просмотрите README, иконку и документацию. Ссылка на релиз в README должна
-   соответствовать выпускаемой версии; доступ к приватному репозиторию указан в установке.
+   соответствовать выпускаемой версии; пользовательская установка описана через каталог GrigDesk.
 4. Убедитесь, что `git status` содержит только ожидаемые файлы. Рабочие секреты,
    локальные пути и сохранённые страницы стороннего сайта в поставку не входят.
 
@@ -34,11 +34,11 @@ Git-репозиторий разработки не является устан
 ```bash
 gh repo create EvilDevRu/grigdesk-codex-reset --private --source=. --remote=origin
 git add .
-git commit -m "Adapt Codex Reset to manifest v1"
-git tag -a v0.1.2 -m "Codex Reset 0.1.2"
+git commit -m "Release Codex Reset 0.1.3"
+git tag -a v0.1.3 -m "Codex Reset 0.1.3"
 git push -u origin main
-git push origin v0.1.2
-gh release create v0.1.2 --verify-tag --title "Codex Reset 0.1.2" --notes-file CHANGELOG.md
+git push origin v0.1.3
+gh release create v0.1.3 --verify-tag --title "Codex Reset 0.1.3" --notes-file CHANGELOG.md
 ```
 
 Если remote или репозиторий уже существует, используйте его вместо повторного
@@ -51,8 +51,10 @@ gh release create v0.1.2 --verify-tag --title "Codex Reset 0.1.2" --notes-file C
 
 `docs/assets/codex-reset.png` — единая иконка, объявленная полем `icon`,
 для карточки GrigDesk и README. PNG 256×256 укладывается в лимит 256 КиБ.
-`docs/assets/codex-reset.svg` — её редактируемый исходник в стиле README других плагинов:
-синяя обводка, контур 24×24, круговая стрелка вокруг часов. SVG содержит `title`
+`docs/assets/codex-reset.svg` — её редактируемый исходник с контуром 24×24:
+знак OpenAI, которым Codex обозначен в GrigDesk, на тёплом персиково-коралловом
+фоне и отдельная круговая стрелка обновления. Скруглённая плитка сохраняет
+прозрачность по углам и читается на светлой и тёмной теме. SVG содержит `title`
 для доступности, не загружает внешние ресурсы и не использует шрифты или скрипты.
 Вход манифеста принимает PNG, JPEG и WebP; SVG используется только как исходник.
 Собственной панели и декларации `contributes.panels` у плагина нет.
